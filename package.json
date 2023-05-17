@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "main": "npx hardhat run scripts/run.js"
+    "main": "npx hardhat run scripts/run.js",
+    "local": "npx hardhat node"
   },
   "keywords": [],
   "author": "",
@@ -17,5 +18,8 @@
     "ethereum-waffle": "^3.4.4",
     "ethers": "^5.7.2",
     "hardhat": "^2.9.9"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3"
   }
 }

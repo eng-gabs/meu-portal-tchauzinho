@@ -1,29 +1,36 @@
 const main = async () => {
-    const [owner, randomPerson] = await hre.ethers.getSigners();
     const waveContractFactory = await hre.ethers.getContractFactory("WavePortal");
-    const waveContract = await waveContractFactory.deploy();
+    const waveContract = await waveContractFactory.deploy({
+        value: hre.ethers.utils.parseEther("0.1"),
+    });
     await waveContract.deployed();
-    console.log("Contract deployed to address:", waveContract.address);
-    console.log("Contract deployed by address:", owner.address);
-    console.log("Random person address:", randomPerson.address);
+    console.log("Endereço do contrato:", waveContract.address);
 
-    let waveCount;
-    waveCount = await waveContract.getTotalWaves();
+    let contractBalance = await hre.ethers.provider.getBalance(
+        waveContract.address
+    );
+    console.log(
+        "Saldo do contrato:",
+        hre.ethers.utils.formatEther(contractBalance)
+    );
 
-    let waveTxn = await waveContract.wave();
+    /*
+    * Vamos tentar mandar um tchauzinho 2 vezes agora
+    */
+    const waveTxn = await waveContract.wave("tchauzinho #1");
     await waveTxn.wait();
 
-    waveCount = await waveContract.getTotalWaves();
+    const waveTxn2 = await waveContract.wave("tchauzinho #2");
+    await waveTxn2.wait();
 
-    waveTxn = await waveContract.connect(randomPerson).wave();
-    await waveTxn.wait();
+    contractBalance = await hre.ethers.provider.getBalance(waveContract.address);
+    console.log(
+        "Saldo do contrato:",
+        hre.ethers.utils.formatEther(contractBalance)
+    );
 
-    waveCount = await waveContract.getTotalWaves();
-
-    waveTxn = await waveContract.connect(randomPerson).wave();
-    await waveTxn.wait();
-
-    waveCount = await waveContract.getTotalWaves();
+    let allWaves = await waveContract.getAllWaves();
+    console.log(allWaves);
 
 };
 
